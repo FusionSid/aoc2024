@@ -1,0 +1,51 @@
+#!/bin/bash
+
+if [ $# -lt 3 ]; then
+  echo "Usage: $0 <day> <part> <use_input>"
+  echo "Example: $0 01 1 true"
+  exit 1
+fi
+
+DAY=$1
+PART=$2
+USE_INPUT=$3
+
+BASE_DIR="./src/day$(printf "%02d" "$DAY")"
+
+if [ ! -d "$BASE_DIR" ]; then
+  echo "Error: Day $DAY directory does not exist."
+  exit 1
+fi
+
+if [ "$USE_INPUT" == "true" ]; then
+  INPUT_FILE="$BASE_DIR/input.txt"
+elif [ "$USE_INPUT" == "false" ]; then
+  INPUT_FILE="$BASE_DIR/test.txt"
+else
+  echo "Error: Invalid value for use_input. Use 'true' or 'false'."
+  exit 1
+fi
+
+if [ "$PART" -eq 1 ]; then
+  CPP_FILE="$BASE_DIR/p1.cpp"
+elif [ "$PART" -eq 2 ]; then
+  CPP_FILE="$BASE_DIR/p2.cpp"
+else
+  echo "Error: Invalid part number. Use 1 or 2."
+  exit 1
+fi
+
+if [ ! -f "$CPP_FILE" ]; then
+  echo "Error: C++ source file for part $PART does not exist in $BASE_DIR."
+  exit 1
+fi
+
+g++ -Wall -std=gnu++17 -O2 -o "$BASE_DIR/aoc_$DAY_$PART" "$CPP_FILE" "./src/utils/utils.cpp" -lm 
+
+if [ $? -ne 0 ]; then
+  echo "Error: Compilation failed."
+  exit 1
+fi
+
+"$BASE_DIR/aoc_$DAY_$PART" "$INPUT_FILE"
+rm "$BASE_DIR/aoc_$DAY_$PART"

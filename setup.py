@@ -1,3 +1,4 @@
+import shutil
 import webbrowser
 from pathlib import Path
 from os import path, environ, mkdir
@@ -29,6 +30,7 @@ def save_input(day: str, dir_path: str) -> None:
 
 def main(day: str):
     DIRECTORY = path.join(SRC_DIR, f"day{int(day):02d}")
+    TEMPLATE_DIR = path.join(SRC_DIR, "utils/")
 
     mkdir(DIRECTORY)
     print("[b green]Created Directory For Day!")
@@ -36,7 +38,11 @@ def main(day: str):
     save_input(day, DIRECTORY)
     print("[b green]Input Data Saved!")
 
-    Path(path.join(DIRECTORY, "test.txt")).touch()  # test input file
+    Path(path.join(DIRECTORY, "test.txt")).touch()
+
+    original_path = path.join(TEMPLATE_DIR, "template.cpp")
+    for original in ["p1.cpp", "p2.cpp"]:
+        shutil.copyfile(original_path, path.join(DIRECTORY, original))
 
     print("[b green]All Files Created!")
 
